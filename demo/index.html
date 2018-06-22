@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+    <script>
+        const params = new URL(location.href).searchParams;
+        const headless = params.has('headless');
+        if (headless) {
+            window.ShadyDOM = {
+                force: true
+            };
+        }
+    </script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.2/webcomponents-loader.js"></script>
+</head>
+
+<body>
+    <script type="module">
+        import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@0.5.2/lit-element.js?module';
+
+        class MyElement extends LitElement {
+
+            static get properties() { return { welcome: String } }
+
+            _render({ welcome }) {
+                return html`
+<style>
+    :host { color: #336; }
+</style>
+<h1>${welcome}</h1>
+<p>This is dynamic, non-bot friendly content.</p>`;
+            }
+        }
+
+        customElements.define('my-element', MyElement);
+    </script>
+
+    <my-element welcome="Hello World!"></my-element>
+</body>
+
+</html>
