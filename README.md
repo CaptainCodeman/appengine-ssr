@@ -154,7 +154,18 @@ which can auto-scale and ensure availability.
 
 ## Configuration Options
 
-Other configuration options can be added to the constructor:
+Other configuration options can be added to the constructor
+for example, if you want a shorter cache expiration and have
+logging enabled:
+
+```go
+mw := ssr.NewSSR("https://pptraas.com",
+    ssr.Expiration(time.Minute*10),
+    ssr.Verbose(true),
+)
+```
+
+Options available:
 
 `ssr.UserAgents(userAgents []string)`
 
