@@ -35,27 +35,29 @@ type (
 	// SSR holds the configuration for the
 	// Server Side Rendering middleware
 	SSR struct {
-		Puppeteer   string
-		Parser      *uaparser.Parser
-		UserAgents  []string
-		QueryString string
-		Cache       CacheProvider
-		Timeout     time.Duration
-		Expiration  time.Duration
-		Verbose     bool
+		Puppeteer     string
+		Parser        *uaparser.Parser
+		UserAgents    []string
+		HeadlessParam string
+		OverrideParam string
+		Cache         CacheProvider
+		Timeout       time.Duration
+		Expiration    time.Duration
+		Verbose       bool
 	}
 )
 
 // NewSSR creates a new Server Side Rendering middleware
 func NewSSR(puppeteer string, opts ...Option) *SSR {
 	ssr := &SSR{
-		Puppeteer:   puppeteer,
-		Parser:      uaparser.NewFromSaved(),
-		UserAgents:  defaultUserAgents,
-		QueryString: "ssr",
-		Cache:       &memcacheProvider{"ssr:"},
-		Timeout:     time.Second * 30,
-		Expiration:  time.Hour,
+		Puppeteer:     puppeteer,
+		Parser:        uaparser.NewFromSaved(),
+		UserAgents:    defaultUserAgents,
+		HeadlessParam: "headless",
+		OverrideParam: "ssr",
+		Cache:         &memcacheProvider{"ssr:"},
+		Timeout:       time.Second * 30,
+		Expiration:    time.Hour,
 	}
 
 	for _, opt := range opts {
@@ -77,6 +79,23 @@ func UserAgents(userAgents []string) Option {
 func UserAgentParser(parser *uaparser.Parser) Option {
 	return func(ssr *SSR) {
 		ssr.Parser = parser
+	}
+}
+
+// HeadlessParam specifies the name of the querystring
+// parameter used to indicate a 'headless' request
+func HeadlessParam(name string) Option {
+	return func(ssr *SSR) {
+		ssr.HeadlessParam = name
+	}
+}
+
+// OverrideParam specifies the name of the querystring
+// parameter used to override SSR rendering (set to
+// empty to disable)
+func OverrideParam(name string) Option {
+	return func(ssr *SSR) {
+		ssr.OverrideParam = name
 	}
 }
 
@@ -112,15 +131,15 @@ func (ssr *SSR) Middleware(next http.Handler) http.Handler {
 // IsHeadless returns true if this is a headless request
 func (ssr *SSR) IsHeadless(r *http.Request) bool {
 	q := r.URL.Query()
-	_, headless := q["headless"]
+	_, headless := q[ssr.HeadlessParam]
 	return headless
 }
 
 // IsBot returns true if the User Agent provided is a bot
 func (ssr *SSR) IsBot(r *http.Request) bool {
-	if ssr.QueryString != "" {
+	if ssr.OverrideParam != "" {
 		q := r.URL.Query()
-		if _, ok := q[ssr.QueryString]; ok {
+		if _, ok := q[ssr.OverrideParam]; ok {
 			return true
 		}
 	}
@@ -153,12 +172,12 @@ func (ssr *SSR) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// add 'headless' query parameter to URL for SSR client use
+	// add headless query parameter to URL for SSR client use
 	q := r.URL.Query()
-	q.Set("headless", "")
-	if ssr.QueryString != "" {
+	q.Set(ssr.HeadlessParam, "")
+	if ssr.OverrideParam != "" {
 		// remove the querystring override if set
-		q.Del(ssr.QueryString)
+		q.Del(ssr.OverrideParam)
 	}
 	r.URL.RawQuery = q.Encode()
 

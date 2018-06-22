@@ -206,7 +206,18 @@ caching your app may be performing.
 
 Set the cache expiration (default 1 hour). This will save
 repeat bot-requests within that time from being re-rendered
-(as long as the items aren't evicted from the cache)
+(as long as the items aren't evicted from the cache).
+
+`ssr.HeadlessParam(name string)`
+
+Set the name of the querystring parameter used to indicate 
+a 'headless' request (default `headless`).
+
+`ssr.OverrideParam(name string)`
+
+Set the name of the querystring parameter used to override 
+SSR rendering (default `ssr`). Set to empty to disable the
+option.
 
 ## Future Work
 
