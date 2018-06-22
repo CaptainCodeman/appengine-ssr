@@ -12,7 +12,7 @@ of it. Oh dear. ShadowDOM? WebComponents? What they?
 
 Here's how your sweet UI appears to Google (using the
 "Fetch as Google" webmaster tool):
-![Fetch as Google with ShadowDom](blob/master/examples/fag-shadow.png)
+![Fetch as Google with ShadowDom](https://raw.githubusercontent.com/captaincodeman/appengine-ssr/master/examples/fag-shadow.png)
 
 Yeah, your SEO isn't even SE, let alone with added O ...
 
@@ -23,7 +23,7 @@ any other bot you configure) requests your site it can be
 converted into ye-olde HTML like a static site. Now your
 site can be rendered and understood. SEO glory awaits ...
 
-![Fetch as Google with ShadyDOM](blob/master/examples/fag-ssr.png)
+![Fetch as Google with ShadyDOM](https://raw.githubusercontent.com/captaincodeman/appengine-ssr/master/examples/fag-ssr.png)
 
 ## How it works
 
@@ -51,7 +51,7 @@ A typical client-side rendered page is available at:
 Here's how the DOM looks when rendered in a modern browser
 such as Chrome. Note the shadow-root:
 
-![ShadowDOM rendered](blob/master/examples/dom-shadow.png)
+![ShadowDOM rendered](https://raw.githubusercontent.com/captaincodeman/appengine-ssr/master/examples/dom-shadow.png)
 
 To view the page as it would look when Server-Side Rendered
 you can override the User-Agent parsing by adding `?ssr` to
@@ -64,7 +64,7 @@ can be understood by any bot. If you generate metadata in
 your front-end framework, this will enable services such as
 Facebook and Twitter to render it:
 
-![Server Side Rendered](blob/master/examples/dom-ssr.png)
+![Server Side Rendered](https://raw.githubusercontent.com/captaincodeman/appengine-ssr/master/examples/dom-ssr.png)
 
 ## Installation
 
