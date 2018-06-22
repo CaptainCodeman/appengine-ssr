@@ -12,7 +12,6 @@ import (
 
 func main() {
 	mw := ssr.NewSSR("https://pptraas.com",
-		ssr.Memcache("ssr:"),
 		ssr.Expiration(time.Hour*24*365), // hey, it's a demo
 	)
 

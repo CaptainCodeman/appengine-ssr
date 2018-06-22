@@ -53,9 +53,9 @@ func NewSSR(puppeteer string, opts ...Option) *SSR {
 		Parser:      uaparser.NewFromSaved(),
 		UserAgents:  defaultUserAgents,
 		QueryString: "ssr",
-		Cache:       &nocache{},
-		Timeout:     time.Second * 20,
-		Expiration:  time.Minute,
+		Cache:       &memcacheProvider{"ssr:"},
+		Timeout:     time.Second * 30,
+		Expiration:  time.Hour,
 	}
 
 	for _, opt := range opts {
