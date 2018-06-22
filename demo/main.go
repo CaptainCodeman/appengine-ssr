@@ -13,6 +13,7 @@ import (
 func main() {
 	mw := ssr.NewSSR("https://pptraas.com",
 		ssr.Expiration(time.Hour*24*365), // hey, it's a demo
+		ssr.Verbose(true),
 	)
 
 	handler := http.HandlerFunc(handle)

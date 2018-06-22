@@ -166,6 +166,9 @@ func (ssr *SSR) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: timeout for cache requests
 	if data, err := ssr.Cache.Get(ctx, key); err == nil {
+		if ssr.Verbose {
+			log.Debugf(ctx, "ssr cache hit %s", key)
+		}
 		// TODO: cache a GOB struct with bytes + response code, headers etc...
 		w.WriteHeader(http.StatusOK)
 		w.Write(data)
@@ -196,9 +199,7 @@ func (ssr *SSR) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	resp, err := client.Get(u)
 
 	if err != nil {
-		if ssr.Verbose {
-			log.Errorf(ctx, "ssr error %v", err)
-		}
+		log.Errorf(ctx, "ssr error %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -206,15 +207,16 @@ func (ssr *SSR) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		if ssr.Verbose {
-			log.Errorf(ctx, "read err %v", err)
-		}
+		log.Errorf(ctx, "read err %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// TODO: timeout for cache call in case it's unavailable / slow
 	ssr.Cache.Put(ctx, key, ssr.Expiration, data)
+	if ssr.Verbose {
+		log.Debugf(ctx, "ssr cached %s (%d bytes)", key, len(data))
+	}
 
 	w.WriteHeader(resp.StatusCode)
 	w.Write(data)
