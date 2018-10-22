@@ -14,23 +14,23 @@
             };
         }
     </script>
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.2/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script>
 </head>
 
 <body>
     <script type="module">
-        import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@0.5.2/lit-element.js?module';
+        import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@0.6.2/lit-element.js?module';
 
         class MyElement extends LitElement {
 
             static get properties() { return { welcome: String } }
 
-            _render({ welcome }) {
+            render() {
                 return html`
 <style>
     :host { color: #336; }
 </style>
-<h1>${welcome}</h1>
+<h1>${this.welcome}</h1>
 <p>This is dynamic, non-bot friendly content.</p>`;
             }
         }
